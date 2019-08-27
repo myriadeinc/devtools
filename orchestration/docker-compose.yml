@@ -1,0 +1,60 @@
+version: '2.1'
+services:
+  emerald:
+    extends:
+      file: config.yml
+      service: emerald
+    build:
+        context: ./
+        dockerfile: Dockerfile.dev
+    image: myriade/emerald:dev
+    command: ["bash", "-c", "npm run start:dev"]
+    environment:
+      - NODE_ENV=local
+    volumes:
+      - ${EMERALD_DIR}/src:/usr/src/app/src
+      - ${EMERALD_DIR}/test:/usr/src/app/test
+      - ${EMERALD_DIR}/config:/usr/src/app/config
+      - ${EMERALD_DIR}/scripts:/usr/src/app/scripts
+    ports:
+      - "8088:8088"
+      - "9878:9878"
+      - "12345:12345"
+      - "12346:12346"
+      - "12347:12347"
+  diamond:
+    extends:
+      file: config.yml
+      service: diamond
+    build:
+        context: ./
+        dockerfile: Dockerfile.dev
+    image: myriade/diamond:dev
+    command: ["bash", "-c", "npm run migration:up && npm run start:dev"]
+    environment:
+      - NODE_ENV=local
+    volumes:
+      - ${DIAMOND_DIR}:/usr/src/app
+    ports:
+      - "8081:8081"
+      - "9873:9873"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=myriade
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgres/data
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -q -U postgres"
+      interval: 1s
+      timeout: 1s
+      retries: 100
+volumes:
+  db_data:

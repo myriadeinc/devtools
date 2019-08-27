@@ -1,0 +1,8 @@
+version: '2.1'
+services:
+    emerald:
+        environment:
+            NODE_ENV: local
+    diamond:
+        environment:
+            NODE_ENV: local

@@ -1,0 +1,10 @@
+WORKSPACE_ROOT=$(ROOT)
+
+EMERALD=$(WORKSPACE_ROOT)/emerald/
+DIAMOND=$(WORKSPACE_ROOT)/diamond/
+
+up:
+	EMERALD_DIR=$(EMERALD) DIAMOND_DIR=$(DIAMOND) docker-compose up
+
+down:
+	docker-compose down
