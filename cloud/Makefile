@@ -7,4 +7,4 @@ up:
 	EMERALD_DIR=$(EMERALD) DIAMOND_DIR=$(DIAMOND) docker-compose up
 
 down:
-	docker-compose down
+	EMERALD_DIR=$(EMERALD) DIAMOND_DIR=$(DIAMOND) docker-compose down

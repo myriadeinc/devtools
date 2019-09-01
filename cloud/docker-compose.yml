@@ -4,13 +4,8 @@ services:
     extends:
       file: config.yml
       service: emerald
-    build:
-        context: ./
-        dockerfile: Dockerfile.dev
     image: myriade/emerald:dev
     command: ["bash", "-c", "npm run start:dev"]
-    environment:
-      - NODE_ENV=local
     volumes:
       - ${EMERALD_DIR}/src:/usr/src/app/src
       - ${EMERALD_DIR}/test:/usr/src/app/test
@@ -26,15 +21,14 @@ services:
     extends:
       file: config.yml
       service: diamond
-    build:
-        context: ./
-        dockerfile: Dockerfile.dev
     image: myriade/diamond:dev
     command: ["bash", "-c", "npm run migration:up && npm run start:dev"]
-    environment:
-      - NODE_ENV=local
     volumes:
-      - ${DIAMOND_DIR}:/usr/src/app
+      - ${DIAMOND_DIR}/src:/usr/src/app/src
+      - ${DIAMOND_DIR}/test:/usr/src/app/test
+      - ${DIAMOND_DIR}/config:/usr/src/app/config
+      - ${DIAMOND_DIR}/scripts:/usr/src/app/scripts
+      - ${DIAMOND_DIR}/migrations:/usr/src/app/migrations
     ports:
       - "8081:8081"
       - "9873:9873"
