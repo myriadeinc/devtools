@@ -5,12 +5,10 @@ services:
       file: config.yml
       service: emerald
     image: myriade/emerald:dev
-    command: ["bash", "-c", "npm run start:dev"]
+    command: ["bash", "-c", "npm install && npm run start:dev"]
     volumes:
-      - ${EMERALD_DIR}/src:/usr/src/app/src
-      - ${EMERALD_DIR}/test:/usr/src/app/test
-      - ${EMERALD_DIR}/config:/usr/src/app/config
-      - ${EMERALD_DIR}/scripts:/usr/src/app/scripts
+      - ${EMERALD_DIR}:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "8088:8088"
       - "9878:9878"
@@ -22,15 +20,12 @@ services:
       file: config.yml
       service: diamond
     image: myriade/diamond:dev
-    command: ["bash", "-c", "npm run migration:up && npm run start:dev"]
+    command: ["bash", "-c", "npm install && npm run migration:up && npm run start:dev"]
     volumes:
-      - ${DIAMOND_DIR}/src:/usr/src/app/src
-      - ${DIAMOND_DIR}/test:/usr/src/app/test
-      - ${DIAMOND_DIR}/config:/usr/src/app/config
-      - ${DIAMOND_DIR}/scripts:/usr/src/app/scripts
-      - ${DIAMOND_DIR}/migrations:/usr/src/app/migrations
+      - ${DIAMOND_DIR}:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
-      - "8081:8081"
+      - "8180:8180"
       - "9873:9873"
     depends_on:
       db:
