@@ -30,6 +30,17 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_healthy
+  cache:
+    image: redis:3.2.3
+    ports:
+        - "6379:6379"
+    healthcheck:
+        test: "redis-cli -h localhost ping | grep -q 'PONG'"
+        interval: 1s
+        timeout: 1s
+        retries: 60
   db:
     image: postgres:9.6
     environment:
