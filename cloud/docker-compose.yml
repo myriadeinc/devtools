@@ -13,8 +13,9 @@ services:
       - "8088:8088"
       - "9878:9878"
       - "12345:12345"
-      - "12346:12346"
-      - "12347:12347"
+    depends_on:
+      cache:
+          condition: service_healthy
   diamond:
     extends:
       file: config.yml
@@ -29,8 +30,6 @@ services:
       - "9873:9873"
     depends_on:
       db:
-        condition: service_healthy
-      cache:
         condition: service_healthy
   cache:
     image: redis:3.2.3
@@ -56,5 +55,10 @@ services:
       interval: 1s
       timeout: 1s
       retries: 100
+  mq:
+    image: rabbitmq:3.6.4-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 volumes:
   db_data:
