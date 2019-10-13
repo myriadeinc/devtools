@@ -8,7 +8,7 @@ services:
       context: ${EMERALD_DIR}
       dockerfile: Dockerfile.dev
     image: myriade/emerald:dev
-    command: ["bash", "-c", "npm install && npm run start:dev"]
+    command: ["bash", "-c","npm install && npm run start:dev"]
     volumes:
       - ${EMERALD_DIR}:/usr/src/app
       - /usr/src/app/node_modules
