@@ -1,0 +1,138 @@
+version: '3.8'
+services:
+  emerald:
+    extends:
+      file: config.yml
+      service: emerald
+    build:
+      context: ${EMERALD_DIR}
+      dockerfile: Dockerfile
+    command: ["bash", "-c","npm run start:dev"]
+    volumes:
+      - ${EMERALD_DIR}:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8088:8088"
+      - "9878:9878"
+      - "22345:22345"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8088/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5  
+    restart: on-failure
+    depends_on:
+      cache:
+        condition: service_healthy
+
+  shadowstone:
+    extends:
+      file: config.yml
+      service: shadowstone
+    build:
+      context: ${SHADOWSTONE_DIR}
+      dockerfile: Dockerfile.dev
+    command: ["bash", "-c","npm install --quiet && npm run start:dev"]
+    volumes:
+      - ${SHADOWSTONE_DIR}:/usr/src/app:rw
+    ports:
+      - "9990:9990"
+      - "9123:9123"
+      - "12345:12345"
+    depends_on:
+      emerald:
+        condition: service_healthy
+
+
+  whetstone:
+    extends:
+      file: config.yml
+      service: whetstone
+    build:
+      context: ${WHETSTONE_DIR}
+      dockerfile: Dockerfile
+    # command: ["bash", "-c","npm install --quiet && npm run start:dev"]
+    volumes:
+      - ${WHETSTONE_DIR}:/usr/src/app:rw
+    ports:
+      - "8222:8222"
+      - "4990:4990"
+    depends_on:
+      emerald:
+        condition: service_healthy
+
+  sapphire:
+    extends:
+      file: config.yml
+      service: sapphire
+    build:
+      context: ${SAPPHIRE_DIR}
+      dockerfile: Dockerfile.dev
+    command: ["bash", "-c", "npm install --loglevel=error && npm run migration:up && npm run start:dev"]
+    volumes:
+      - ${SAPPHIRE_DIR}:/usr/src/app
+    ports:
+      - "8081:8081"
+      - "9870:9870"
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+  diamond:
+    extends:
+      file: config.yml
+      service: diamond
+    build:
+      context: ${DIAMOND_DIR}
+      dockerfile: Dockerfile.dev
+    # image: myriadeinc/diamond:dev
+    command: ["bash", "-c", "npm install --loglevel=error && npm run migration:up && npm run start:dev"]
+    volumes:
+      - ${DIAMOND_DIR}:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8180:8180"
+      - "9873:9873"
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+  cache:
+    image: redis:3.2.3
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: "redis-cli -h localhost ping | grep -q 'PONG'"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    logging:
+      driver: none
+  db:
+    image: postgres:11
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=myriade
+    ports:
+      - "5432:5432"
+    logging:
+      driver: none
+    volumes:
+      - db_data:/var/lib/postgres/data
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -q -U postgres"
+      interval: 1s
+      timeout: 1s
+      retries: 100
+  mq:
+    image: rabbitmq:3.6.4-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    logging:
+      driver: none
+volumes:
+  db_data:

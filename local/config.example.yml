@@ -1,0 +1,89 @@
+version: '2.1'
+services:
+  pickaxe:
+    environment:
+      LOGDNA_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      SERVICE__SHARED_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      SERVICE__DEBUG: 1
+  sapphire:
+    environment:
+      service__shared_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      rabbitmq__url: amqp://guest:guest@mq:5672/
+      rabbitmq__queue: Miner::Metrics
+      rabbitmq__debug: 0
+      db__host: db
+      db__port: 5432
+      monero__daemon__host: daemon.myriade.io
+      monero__daemon__port: 80
+      godKey: jenkins
+      godMode: 1
+      diamond__public_key: |-
+          -----BEGIN PUBLIC KEY-----
+          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END PUBLIC KEY-----
+  emerald:
+    environment:
+      NODE_ENV: local
+      service__shared_secret: 5e27500b-2838-4fb3-b2e8-2587101829c8
+      rabbitmq__url: amqp://guest:guest@mq:5672/
+      rabbitmq__queue: Miner::Metrics
+      rabbitmq__debug: 1
+      # rabbitmq__url: 'localhost"'
+      cache__host: cache
+      http__port: 22345
+      tcp__port: 32345
+      nobridge: 0
+      pool__port: 22345
+      pool__poolAddress: 48PooLeFV4XNovY2f5hJoLVYSFMJRcAp62Fwku7zewE9dK2MCpox8ZdUs6boWVGcC5Z4PVnxewacK7uT3CGsUgPfE6BZ4eD
+      monero__daemon__host: daemon.myriade.io
+      monero__daemon__port: 80
+      pickaxe__host: pickaxe
+      pickaxe__port: 8050
+      diamond__host: diamond
+      diamond__port: 8180
+      shadowstone__host: "http://shadowstone:9990/refresh"
+      whetstone__host: "http://whetstone:4990/jobfeed"
+      pool__desc: "High end hardware"
+      http: 1
+      diamond__public_key: |-
+          -----BEGIN PUBLIC KEY-----
+          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END PUBLIC KEY-----       
+  diamond:
+    environment:
+      NODE_ENV: local
+      service__shared_secret: xxxxxxxxxxxxxxxxxxx
+      db__host: db
+      db__port: 5432
+      mail__sendgrid_key: xxxxxxxxxxxxxxxxxxxxxxxxx
+      jwt__public_key: |-
+          -----BEGIN PUBLIC KEY-----
+          xxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END PUBLIC KEY-----
+      jwt__private_key: |-
+          -----BEGIN RSA PRIVATE KEY-----
+          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END RSA PRIVATE KEY-----
+  shadowstone:
+    environment:
+      service__shared_secret: xxxxxxxxxxxxxxxxxxxxxxxxx
+      emerald__url: amqp://guest:guest@mq:5672/
+      emerald__port: 22345
+      control__port: 9990
+      proxy__port: 12345
+      tls__cert_example: |-
+          -----BEGIN PUBLIC KEY-----
+          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END PUBLIC KEY-----
+  whetstone:
+    environment:
+      service__shared_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      service__local__name: whetstone
+      proxy__port: 8222
+      control__port: 4990
+      emerald__host: emerald
+      emerald__port: 8088
+      tls__cert: |-
+          -----BEGIN PUBLIC KEY-----
+         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          -----END PUBLIC KEY-----       

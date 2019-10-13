@@ -1,0 +1,15 @@
+WORKSPACE_ROOT=$(MYRIADE_ROOT)
+
+EMERALD=$(WORKSPACE_ROOT)/emerald/
+DIAMOND=$(WORKSPACE_ROOT)/diamond/
+PICKAXE=$(WORKSPACE_ROOT)/pickaxe/
+SAPPHIRE=$(WORKSPACE_ROOT)/sapphire/
+SHADOWSTONE=$(WORKSPACE_ROOT)/shadowstone/
+
+DIR = EMERALD_DIR=$(EMERALD) DIAMOND_DIR=$(DIAMOND) PICKAXE_DIR=$(PICKAXE) SAPPHIRE_DIR=$(SAPPHIRE) SHADOWSTONE_DIR=$(SHADOWSTONE)
+up:
+	 $(DIR) docker-compose up -d
+dev:
+	$(DIR) docker-compose build
+down:
+	docker-compose down
