@@ -7,7 +7,7 @@ services:
     build:
       context: ${EMERALD_DIR}
       dockerfile: Dockerfile.dev
-    image: myriade/emerald:dev
+    image: myriadeinc/emerald:dev
     command: ["bash", "-c","npm install && npm run start:dev"]
     volumes:
       - ${EMERALD_DIR}:/usr/src/app
@@ -26,8 +26,8 @@ services:
     build:
       context: ${SAPPHIRE_DIR}
       dockerfile: Dockerfile.dev
-    image: myriade/sapphire:dev
-    command: ["bash", "-c","npm install && npm run start:dev"]
+    image: myriadeinc/sapphire:dev
+    command: ["bash", "-c", "npm install && npm run migration:up && npm run start:dev"]
     volumes:
       - ${SAPPHIRE_DIR}:/usr/src/app
       - /usr/src/app/node_modules
@@ -44,7 +44,7 @@ services:
     build:
       context: ${DIAMOND_DIR}
       dockerfile: Dockerfile.dev
-    image: myriade/diamond:dev
+    image: myriadeinc/diamond:dev
     command: ["bash", "-c", "npm install && npm run migration:up && npm run start:dev"]
     volumes:
       - ${DIAMOND_DIR}:/usr/src/app
@@ -62,7 +62,7 @@ services:
     build:
       context: ${PICKAXE_DIR}
       dockerfile: Dockerfile.dev
-    image: myriade/pickaxe:dev
+    image: myriadeinc/pickaxe:dev
     volumes:
       - ${PICKAXE_DIR}:/go/src/github.com/myriadeinc/pickaxe
     ports:
