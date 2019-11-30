@@ -18,7 +18,7 @@ services:
       - "12345:12345"
     depends_on:
       cache:
-          condition: service_healthy
+        condition: service_healthy
   sapphire:
     extends:
       file: config.yml
@@ -36,7 +36,9 @@ services:
       - "9870:9870"
     depends_on:
       db:
-          condition: service_healthy
+        condition: service_healthy
+      cache:
+        condition: service_healthy
   diamond:
     extends:
       file: config.yml
@@ -55,6 +57,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_healthy
   pickaxe:
     extends:
       file: config.yml
@@ -71,12 +75,12 @@ services:
   cache:
     image: redis:3.2.3
     ports:
-        - "6379:6379"
+      - "6379:6379"
     healthcheck:
-        test: "redis-cli -h localhost ping | grep -q 'PONG'"
-        interval: 1s
-        timeout: 1s
-        retries: 60
+      test: "redis-cli -h localhost ping | grep -q 'PONG'"
+      interval: 1s
+      timeout: 1s
+      retries: 60
   db:
     image: postgres:9.6
     environment:
