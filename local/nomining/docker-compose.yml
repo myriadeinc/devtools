@@ -1,47 +1,5 @@
 version: '2.1'
 services:
-  emerald:
-    extends:
-      file: config.yml
-      service: emerald
-    build:
-      context: ${EMERALD_DIR}
-      dockerfile: Dockerfile
-    command: ["bash", "-c","npm run start:dev"]
-    volumes:
-      - ${EMERALD_DIR}:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - "8088:8088"
-      - "9878:9878"
-      - "22345:22345"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8088/healthcheck"]
-      interval: 30s
-      timeout: 10s
-      retries: 5  
-    restart: on-failure
-    depends_on:
-      cache:
-        condition: service_healthy
-
-  shadowstone:
-    extends:
-      file: config.yml
-      service: shadowstone
-    build:
-      context: ${SHADOWSTONE_DIR}
-      dockerfile: Dockerfile.dev
-    command: ["bash", "-c","npm install --quiet && npm run start:dev"]
-    volumes:
-      - ${SHADOWSTONE_DIR}:/usr/src/app:rw
-    ports:
-      - "9990:9990"
-      - "9123:9123"
-      - "12345:12345"
-    depends_on:
-      emerald:
-        condition: service_healthy
   sapphire:
     extends:
       file: config.yml
@@ -80,18 +38,6 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
-  # pickaxe:
-  #   extends:
-  #     file: config.yml
-  #     service: pickaxe
-  #   build:
-  #     context: ${PICKAXE_DIR}
-  #     dockerfile: Dockerfile.dev
-  #   volumes:
-  #     - ${PICKAXE_DIR}:/go/src/github.com/myriadeinc/pickaxe
-  #   ports:
-  #     - 8050:8050
-  #     - 18050:18050 
   cache:
     image: redis:3.2.3
     ports:
