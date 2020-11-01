@@ -2,4 +2,4 @@ local/config.yml
 prod/
 local/config.prod.yml.bak
 local/nomining/config.yml
-
+proxy/node_modules
